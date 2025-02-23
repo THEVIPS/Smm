@@ -21,7 +21,7 @@ except Exception as e:
 finally:
     driver.quit()
 
-@app.route('/') def home(): return render_template("index.html")
+@app.route('/') def home(): return ''' <!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Panel de Automatización</title> <style> body { font-family: Arial, sans-serif; background-color: #1e1e1e; color: white; text-align: center; padding: 50px; } .container { max-width: 400px; margin: auto; background: #2c2c2c; padding: 20px; border-radius: 10px; } select, input, button { width: 100%; padding: 10px; margin: 10px 0; border: none; border-radius: 5px; } button { background-color: #ff4c4c; color: white; font-weight: bold; cursor: pointer; } </style> </head> <body> <div class="container"> <h2>Panel de Automatización</h2> <form id="automationForm"> <label for="platform">Plataforma:</label> <select id="platform" name="platform"> <option value="Tiktok">Tiktok</option> <option value="Telegram">Telegram</option> <option value="Youtube">Youtube</option> <option value="Facebook">Facebook</option> <option value="Instagram">Instagram</option> <option value="Twitter">Twitter</option> </select> <label for="url">Enlace:</label> <input type="text" id="url" name="url" required> <label for="action">Acción:</label> <select id="action" name="action"> <option value="visitas">Visitas</option> <option value="seguidores">Seguidores</option> <option value="likes">Likes</option> </select> <label for="amount">Cantidad:</label> <input type="number" id="amount" name="amount" min="1" required> <button type="submit">Enviar</button> </form> <p id="result"></p> </div> <script> document.getElementById("automationForm").addEventListener("submit", function(event) { event.preventDefault(); let formData = new FormData(this); fetch("/send", { method: "POST", body: formData }) .then(response => response.json()) .then(data => { document.getElementById("result").textContent = data.message; }); }); </script> </body> </html> '''
 
 @app.route('/send', methods=['POST']) def send(): platform = request.form['platform'] url = request.form['url'] action = request.form['action'] amount = int(request.form['amount'])
 
@@ -36,5 +36,4 @@ thread.start()
 return jsonify({"status": "success", "message": f"{amount} {action} enviados a {url} en {platform}"})
 
 if name == 'main': init_db() app.run(debug=True)
-
 
